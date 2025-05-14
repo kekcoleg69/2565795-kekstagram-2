@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Олег Лебедев](https://up.htmlacademy.ru/javascript-individual/2/user/2565795).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгения Подопригора](https://htmlacademy.ru/profile/id2387199).
 
 ---
 
