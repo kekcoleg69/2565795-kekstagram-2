@@ -25,7 +25,7 @@ function returnNumber(string){
 }
 returnNumber('42');
 
-//Задание модуля 5.
+//Задание модуля 5..
 
 function isMeetingInWorkHours(startWorkTime, endWorkTime,startMeetingTime, endMeetingTime){
   startWorkTime = startWorkTime.split(':');
