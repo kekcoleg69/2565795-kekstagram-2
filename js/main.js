@@ -1,2 +1,4 @@
 import { generatePhotos } from './data.js';
-generatePhotos();
+import { renderMiniatures } from './render-miniatures.js';
+const photos = generatePhotos();
+renderMiniatures(photos);
