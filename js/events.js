@@ -1,8 +1,9 @@
-import { showBigPicture, closeBigPicture } from './full-screen-picture.js';
+import { showBigPicture, closeBigPicture, renderComments } from './full-screen-picture.js';
 
 export function setupMiniaturesEvents(photos) {
   const picturesContainer = document.querySelector('.pictures');
   const cancelButton = document.querySelector('.big-picture__cancel');
+  const commentsLoader = document.querySelector('.social__comments-loader');
 
   picturesContainer.addEventListener('click', (evt) => {
     const pictureElement = evt.target.closest('.picture');
@@ -21,4 +22,9 @@ export function setupMiniaturesEvents(photos) {
       closeBigPicture();
     }
   });
+
+  commentsLoader.addEventListener('click', () =>{
+    renderComments();
+  });
 }
+
