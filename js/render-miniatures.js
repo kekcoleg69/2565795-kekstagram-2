@@ -1,9 +1,11 @@
-const pictures = document.querySelector('.pictures');
+const picturesContainer = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content;
 const picture = pictureTemplate.querySelector('.picture');
-export function renderMiniatures(photos){
+export function renderMiniatures(photos) {
   const fragment = document.createDocumentFragment();
-  for(const photo of photos){
+
+  for (const [index, photo] of photos.entries()) {
+
     const newElement = picture.cloneNode(true);
     const newElemImage = newElement.querySelector('.picture__img');
     const newElemComments = newElement.querySelector('.picture__comments');
@@ -13,8 +15,11 @@ export function renderMiniatures(photos){
     newElemImage.alt = photo.description;
     newElemComments.textContent = photo.comments.length;
     newElemLikes.textContent = photo.likes;
+
+    newElement.dataset.index = index;
+
     fragment.appendChild(newElement);
   }
-  pictures.appendChild(fragment);
-}
 
+  picturesContainer.appendChild(fragment);
+}
