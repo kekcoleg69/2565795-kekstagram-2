@@ -42,10 +42,8 @@ export function renderComments(){
     const com = document.createElement('li');
     const comImg = document.createElement('img');
     const comText = document.createElement('p');
-
     com.appendChild(comImg);
     com.appendChild(comText);
-
     com.classList.add('social__comment');
     comImg.src = comment.avatar;
     comImg.alt = comment.name;
