@@ -44,6 +44,3 @@ isMeetingInWorkHours('14:00', '17:30', '08:0', 90); // false
 isMeetingInWorkHours('8:00', '17:30', '08:00', 900); // false
 
 
-addEventListener('click', (evt) =>{
-  evt.preventDefault();
-});

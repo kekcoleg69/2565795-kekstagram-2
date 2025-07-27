@@ -1,5 +1,6 @@
 import { getRandomInt, getRandomArrayElem } from './util.js';
 import { messages, names } from './constants.js';
+
 function createComment(idComment){
   const messageCount = getRandomInt(1, 2);
   let commentText = '';
@@ -44,3 +45,4 @@ export function generatePhotos(){
   }
   return photos;
 }
+
