@@ -1,3 +1,5 @@
+import { resetForm } from './form-validation.js';
+
 export function PhotoUploadForm() {
   const buttonDownload = document.querySelector('.img-upload__input');
   const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -60,14 +62,14 @@ export function PhotoUploadForm() {
   buttonCancel.addEventListener('click', () => {
     uploadOverlay.classList.add('hidden');
     document.body.classList.remove('modal-open');
+    resetForm();
   });
 
   document.addEventListener('keydown', (evt) => {
     if (evt.key === 'Escape') {
       uploadOverlay.classList.add('hidden');
       document.body.classList.remove('modal-open');
+      resetForm();
     }
   });
 }
-
-
