@@ -4,6 +4,7 @@ import { setupMiniaturesEvents } from './events.js';
 import { PhotoUploadForm } from './form.js';
 import { setupImageEffects } from './effects-slider.js';
 import { validationForm } from './form-validation.js';
+import { setupFilters } from './filters.js';
 
 PhotoUploadForm();
 setupImageEffects();
@@ -13,13 +14,13 @@ getPhotos()
   .then((photos) => {
     renderMiniatures(photos);
     setupMiniaturesEvents(photos);
+    setupFilters(photos); // 👈 включаем фильтры
   })
   .catch(() => {
-    const errorTemplate = document.querySelector('#data-error');
-    const fragment = errorTemplate.content.cloneNode(true);
+    const template = document.querySelector('#data-error');
+    const fragment = template.content.cloneNode(true);
     document.body.appendChild(fragment);
     setTimeout(() => {
-      const errorElement = document.querySelector('.data-error');
-      errorElement?.remove();
+      document.querySelector('.data-error')?.remove();
     }, 5000);
   });
