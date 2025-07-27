@@ -5,11 +5,9 @@ export function PhotoUploadForm() {
   const uploadOverlay = document.querySelector('.img-upload__overlay');
   const buttonCancel = document.querySelector('.img-upload__cancel');
   const previewImg = document.querySelector('.img-upload__preview img');
-
   const smallerBtn = document.querySelector('.scale__control--smaller');
   const biggerBtn = document.querySelector('.scale__control--bigger');
   const scaleInput = document.querySelector('.scale__control--value');
-
   const defaultEffectRadio = document.querySelector('#effect-none');
   const effectLevel = document.querySelector('.img-upload__effect-level');
 
