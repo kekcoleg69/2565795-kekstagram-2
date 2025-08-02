@@ -10,7 +10,7 @@ getPhotos()
   .then((photos) => {
     renderMiniatures(photos);
     setupMiniaturesEvents(photos);
-    setupFilters(photos); // покажет .img-filters
+    setupFilters(photos);
   })
   .catch(() => {
     const errorTemplate = document.querySelector('#data-error');
