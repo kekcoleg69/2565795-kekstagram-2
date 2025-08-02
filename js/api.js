@@ -18,9 +18,7 @@ export async function sendFormData(formData) {
       method: 'POST',
       body: formData,
     });
-    if (!response.ok) {
-      throw new Error(`Ошибка отправки: ${response.status}`);
-    }
+    return response;
   } catch (error) {
     throw new Error('Не удалось отправить форму. Попробуйте ещё раз.');
   }
