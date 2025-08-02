@@ -48,7 +48,6 @@ function applyFilter(filterId) {
 
 const debouncedApplyFilter = debounce(applyFilter, 500);
 
-// 👉 Основной экспорт
 export function setupFilters(photos) {
   currentPhotos = photos;
 
@@ -56,8 +55,8 @@ export function setupFilters(photos) {
 
   filterButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      setActiveButton(button); // вызывается сразу
-      debouncedApplyFilter(button.id); // а фильтрация — с задержкой
+      setActiveButton(button);
+      debouncedApplyFilter(button.id);
     });
   });
 }

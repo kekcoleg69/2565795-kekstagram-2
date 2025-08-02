@@ -13,9 +13,15 @@ export async function getPhotos() {
 }
 
 export async function sendFormData(formData) {
-  const response = await fetch(SERVER_URL, {
-    method: 'POST',
-    body: formData,
-  });
-  return response;
+  try {
+    const response = await fetch(SERVER_URL, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!response.ok) {
+      throw new Error(`Ошибка отправки: ${response.status}`);
+    }
+  } catch (error) {
+    throw new Error('Не удалось отправить форму. Попробуйте ещё раз.');
+  }
 }

@@ -37,7 +37,6 @@ export function renderComments() {
   bigPictureAllQuantityComments.textContent = archiveComments.length;
 
   updateLoaderVisibility();
-
 }
 
 function createComment(comment) {
