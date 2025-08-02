@@ -4,59 +4,94 @@ const bigPictureLikes = bigPicture.querySelector('.likes-count');
 const bigPictureAllQuantityComments = bigPicture.querySelector('.social__comment-total-count');
 const bigPictureShownQuantityComments = bigPicture.querySelector('.social__comment-shown-count');
 const bigPictureCommentsContainer = bigPicture.querySelector('.social__comments');
-const bigPictureDescription = bigPicture.querySelector('.social__caption');
-const commentsLoader = document.querySelector('.social__comments-loader');
+const bigPictureDescription = document.querySelector('.social__caption');
+const commentsLoader = bigPicture.querySelector('.social__comments-loader');
+const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
 let archiveComments = [];
+let renderedCount = 0;
+const COMMENTS_STEP = 5;
+
+function updateLoaderVisibility() {
+  if (renderedCount >= archiveComments.length) {
+    commentsLoader.classList.add('hidden');
+  } else {
+    commentsLoader.classList.remove('hidden');
+  }
+}
+
+export function renderComments() {
+  const nextComments = archiveComments.slice(renderedCount, renderedCount + COMMENTS_STEP);
+  let added = 0;
+
+  for (const comment of nextComments) {
+    if (comment && typeof comment.message === 'string') {
+      bigPictureCommentsContainer.appendChild(createComment(comment));
+      added++;
+    }
+  }
+
+  renderedCount += added;
+
+  bigPictureShownQuantityComments.textContent = bigPictureCommentsContainer.children.length;
+  bigPictureAllQuantityComments.textContent = archiveComments.length;
+
+  updateLoaderVisibility();
+
+}
+
+function createComment(comment) {
+  const li = document.createElement('li');
+  li.classList.add('social__comment');
+
+  const img = document.createElement('img');
+  img.classList.add('social__picture');
+  img.src = comment.avatar;
+  img.alt = comment.name;
+  img.width = 35;
+  img.height = 35;
+
+  const text = document.createElement('p');
+  text.classList.add('social__text');
+  text.textContent = comment.message;
+
+  li.appendChild(img);
+  li.appendChild(text);
+
+  return li;
+}
 
 export function showBigPicture(photo) {
-  bigPicture.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
-  document.body.classList.add('modal-open');
   bigPictureImg.src = photo.url;
+  bigPictureImg.alt = photo.description;
   bigPictureLikes.textContent = photo.likes;
-  bigPictureAllQuantityComments.textContent = photo.comments.length;
   bigPictureDescription.textContent = photo.description;
+
+  archiveComments = photo.comments;
+  renderedCount = 0;
   bigPictureCommentsContainer.innerHTML = '';
 
-
-  archiveComments = [...photo.comments];
-
   renderComments();
+
+  bigPicture.classList.remove('hidden');
+  document.body.classList.add('modal-open');
 }
 
-export function closeBigPicture(){
-  document.body.classList.remove('modal-open');
+export function closeBigPicture() {
   bigPicture.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  archiveComments = [];
+  renderedCount = 0;
+  bigPictureCommentsContainer.innerHTML = '';
 }
 
-export function renderComments(){
-  const comments = archiveComments.splice(0,5);
+closeButton.addEventListener('click', closeBigPicture);
 
+document.addEventListener('keydown', (evt) => {
+  const isHashtagFocus = document.activeElement.classList.contains('text__hashtags');
+  const isCommentFocus = document.activeElement.classList.contains('text__description');
 
-  if(archiveComments.length === 0){
-    commentsLoader.classList.add('hidden');
+  if (evt.key === 'Escape' && !isHashtagFocus && !isCommentFocus) {
+    closeBigPicture();
   }
-
-  for(const comment of comments){
-    const com = document.createElement('li');
-    const comImg = document.createElement('img');
-    const comText = document.createElement('p');
-    com.appendChild(comImg);
-    com.appendChild(comText);
-    com.classList.add('social__comment');
-    comImg.src = comment.avatar;
-    comImg.alt = comment.name;
-    comImg.classList.add('social__picture');
-    comImg.width = 35;
-    comImg.height = 35;
-
-    comText.classList.add('social__text');
-    comText.textContent = comment.message;
-
-    bigPictureCommentsContainer.appendChild(com);
-
-    bigPictureShownQuantityComments.textContent = bigPictureCommentsContainer.children.length;
-
-  }
-}
+});

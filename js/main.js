@@ -6,6 +6,7 @@ import { setupImageEffects } from './effects-slider.js';
 import { validationForm } from './form-validation.js';
 import { setupFilters } from './filters.js';
 
+
 PhotoUploadForm();
 setupImageEffects();
 validationForm();
@@ -14,7 +15,7 @@ getPhotos()
   .then((photos) => {
     renderMiniatures(photos);
     setupMiniaturesEvents(photos);
-    setupFilters(photos); // 👈 включаем фильтры
+    setupFilters(photos);
   })
   .catch(() => {
     const template = document.querySelector('#data-error');

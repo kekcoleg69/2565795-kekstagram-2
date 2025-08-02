@@ -1,4 +1,5 @@
 import { sendFormData } from './api.js';
+import { closeUploadModal } from './form.js';
 
 const form = document.querySelector('.img-upload__form');
 const hashtagsInput = form.querySelector('.text__hashtags');
@@ -11,7 +12,7 @@ const submitBtn = form.querySelector('.img-upload__submit');
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'pristine-error img-upload__field-wrapper--error'
+  errorTextClass: 'pristine-error img-upload__field-wrapper--error',
 });
 
 export function resetForm() {
@@ -20,31 +21,36 @@ export function resetForm() {
 
   previewImg.style.transform = 'scale(1)';
   scaleInput.value = '100%';
-
   previewImg.style.filter = '';
-  document.querySelector('#effect-none').checked = true;
-
   fileInput.value = '';
+  document.querySelector('#effect-none').checked = true;
 }
 
 export function validationForm() {
   const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
-  const getHashtags = (value) => value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+
+  const getHashtags = (value) => {
+    if (!value.trim()) {
+      return [];
+    }
+    return value.trim().split(/\s+/).filter(Boolean).map((tag) => tag.toLowerCase());
+  };
 
   pristine.addValidator(
     hashtagsInput,
-    (value) => getHashtags(value).length > 0,
-  );
-
-  pristine.addValidator(
-    hashtagsInput,
-    (value) => getHashtags(value).every((tag) => tag.length > 1),
+    (value) => {
+      const tags = getHashtags(value);
+      return tags.length === 0 || tags.every((tag) => tag.length > 1);
+    },
     'Хэштег не может состоять только из символа #'
   );
 
   pristine.addValidator(
     hashtagsInput,
-    (value) => getHashtags(value).every((tag) => HASHTAG_REGEX.test(tag)),
+    (value) => {
+      const tags = getHashtags(value);
+      return tags.length === 0 || tags.every((tag) => HASHTAG_REGEX.test(tag));
+    },
     'Хэштег должен начинаться с # и содержать только буквы и цифры, максимум 20 символов'
   );
 
@@ -71,48 +77,46 @@ export function validationForm() {
 
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
+
     const isValid = pristine.validate();
-
-    if (isValid) {
-      const formData = new FormData(form);
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Публикую...';
-
-      sendFormData(formData)
-        .then(() => {
-          showSuccessMessage();
-          resetForm();
-        })
-        .catch(() => {
-          showErrorMessage();
-        })
-        .finally(() => {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Опубликовать';
-        });
-
-    } else {
-      showErrorMessage();
+    if (!isValid) {
+      return;
     }
+
+    const formData = new FormData(form);
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Публикую...';
+
+    sendFormData(formData)
+      .then((response) => {
+        if (response.ok) {
+          showSuccessMessage();
+          closeUploadModal();
+          resetForm();
+        } else {
+          showErrorMessage();
+        }
+      })
+      .catch(showErrorMessage)
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Опубликовать';
+      });
   });
 }
 
 function showSuccessMessage() {
-  const success = document.querySelector('#success');
-  const fragment = success.content.cloneNode(true);
-  const successBtn = fragment.querySelector('.success__button');
+  const template = document.querySelector('#success').content.cloneNode(true);
+  const section = template.querySelector('.success');
+  const button = section.querySelector('.success__button');
 
-  document.body.appendChild(fragment);
+  document.body.appendChild(section);
 
   function removeSuccessMessage() {
-    const successElement = document.querySelector('.success');
-    successElement?.remove();
+    section.remove();
     document.removeEventListener('keydown', onEsc);
-    document.removeEventListener('click', onClickOutside);
+    document.removeEventListener('click', onOutsideClick);
   }
-
-  successBtn.addEventListener('click', removeSuccessMessage);
 
   function onEsc(evt) {
     if (evt.key === 'Escape') {
@@ -120,31 +124,29 @@ function showSuccessMessage() {
     }
   }
 
-  function onClickOutside(evt) {
-    if (!evt.target.closest('.success__inner')) {
+  function onOutsideClick(evt) {
+    if (evt.target === section) {
       removeSuccessMessage();
     }
   }
 
+  button.addEventListener('click', removeSuccessMessage);
   document.addEventListener('keydown', onEsc);
-  document.addEventListener('click', onClickOutside);
+  document.addEventListener('click', onOutsideClick);
 }
 
 function showErrorMessage() {
-  const errorTemplate = document.querySelector('#error');
-  const fragment = errorTemplate.content.cloneNode(true);
-  const errorBtn = fragment.querySelector('.error__button');
+  const template = document.querySelector('#error').content.cloneNode(true);
+  const section = template.querySelector('.error');
+  const button = section.querySelector('.error__button');
 
-  document.body.appendChild(fragment);
+  document.body.appendChild(section);
 
   function removeErrorMessage() {
-    const errorElement = document.querySelector('.error');
-    errorElement?.remove();
+    section.remove();
     document.removeEventListener('keydown', onEsc);
-    document.removeEventListener('click', onClickOutside);
+    document.removeEventListener('click', onOutsideClick);
   }
-
-  errorBtn.addEventListener('click', removeErrorMessage);
 
   function onEsc(evt) {
     if (evt.key === 'Escape') {
@@ -152,12 +154,13 @@ function showErrorMessage() {
     }
   }
 
-  function onClickOutside(evt) {
-    if (!evt.target.closest('.error__inner')) {
+  function onOutsideClick(evt) {
+    if (evt.target === section) {
       removeErrorMessage();
     }
   }
 
+  button.addEventListener('click', removeErrorMessage);
   document.addEventListener('keydown', onEsc);
-  document.addEventListener('click', onClickOutside);
+  document.addEventListener('click', onOutsideClick);
 }
