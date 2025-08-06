@@ -74,6 +74,13 @@ export function showBigPicture(photo) {
 
   bigPicture.classList.remove('hidden');
   document.body.classList.add('modal-open');
+
+  bigPicture.addEventListener('click', (evt) => {
+    const inner = bigPicture.querySelector('.big-picture__preview');
+    if (!inner.contains(evt.target)) {
+      closeBigPicture();
+    }
+  });
 }
 
 export function closeBigPicture() {

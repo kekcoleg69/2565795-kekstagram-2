@@ -74,6 +74,12 @@ export function uploadPhotoForm() {
   buttonCancel.addEventListener('click', () => {
     closeUploadModal();
   });
+  uploadOverlay.addEventListener('click', (evt) => {
+    const inner = uploadOverlay.querySelector('.img-upload__wrapper');
+    if (!inner.contains(evt.target)) {
+      closeUploadModal();
+    }
+  });
 
   document.addEventListener('keydown', (evt) => {
     const isInputFocused =
