@@ -2,8 +2,8 @@ import { getPhotos } from './api.js';
 import { renderMiniatures } from './render-miniatures.js';
 import { setupMiniaturesEvents } from './events.js';
 import { setupFilters } from './filters.js';
-import { validationForm } from './form-validation.js';
-import { PhotoUploadForm } from './form.js';
+import { validateForm } from './form-validation.js';
+import { uploadPhotoForm } from './form.js';
 import { setupImageEffects } from './effects-slider.js';
 
 getPhotos()
@@ -26,6 +26,6 @@ getPhotos()
     }
   });
 
-PhotoUploadForm();
-validationForm();
+uploadPhotoForm();
+validateForm();
 setupImageEffects();

@@ -40,7 +40,7 @@ function closeUploadModal() {
   resetForm();
 }
 
-export function PhotoUploadForm() {
+export function uploadPhotoForm() {
   smallerBtn.addEventListener('click', () => {
     if (scale > SCALE_MIN) {
       scale -= SCALE_STEP;

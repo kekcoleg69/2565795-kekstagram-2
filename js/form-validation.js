@@ -26,7 +26,7 @@ export function resetForm() {
   document.querySelector('#effect-none').checked = true;
 }
 
-export function validationForm() {
+export function validateForm() {
   const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 
   const getHashtags = (value) => {
